@@ -2,7 +2,7 @@ import os
 import re
 from pathlib import Path
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from google import genai
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,7 +34,7 @@ def urls(interaction):
 @app.route("/", methods=["GET"])
 @app.route("/api", methods=["GET"])
 def health():
-    return jsonify(status="ok", message="Use POST /api/ask to ask OptiBot")
+    return send_file(ROOT / "index.html")
 
 
 @app.route("/ask", methods=["POST"])
