@@ -1,0 +1,6 @@
+google-genai>=2.3.0
+python-dotenv>=1.1.1
+beautifulsoup4>=4.13.0
+markdownify>=1.2.0
+requests>=2.32.0
+pytest>=8.4.0

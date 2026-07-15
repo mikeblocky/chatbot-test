@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.local
+.vector-store-id
+.assistant-id
+.gemini-file-search-store
+__pycache__/
+.codex/
+.agents/
+AGENTS.md
+artifacts/*.html
+artifacts/gemini-*.json
+.pytest_cache/
