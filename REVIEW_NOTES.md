@@ -1,25 +1,27 @@
 # Project review notes
 
-## Concept
+## What the project does
 
-The system is retrieval-augmented generation: source documents are cleaned, split, embedded, retrieved by semantic similarity, and supplied to Gemini as the only answer context. The language model writes the response; File Search supplies grounding and citations.
+The job collects support articles and turns them into clean Markdown files. Those files are loaded into Gemini File Search so answers can be based on the support documentation and include source links.
 
-## Approach
+## Why it works this way
 
-The Zendesk API is more stable than scraping rendered pages and excludes navigation by design. Each normalized article includes its canonical URL. SHA-256 hashes are stored with Gemini document metadata, making the remote File Search store the synchronization state. A daily run compares hashes, replaces changed documents, adds new ones, and skips unchanged content.
+The support site provides a Zendesk API, so the job can request the article content directly instead of scraping menus and page layouts. Every file includes its original article URL.
 
-## Learning process
+Each file also gets a SHA-256 hash. On the next run, the job compares that hash with the value stored in Gemini. New files are added, changed files are replaced, and unchanged files are skipped.
 
-Start from the provider's official API documentation, build one end-to-end example, inspect real response objects, and then add retries, validation, and tests. Provider limits should be verified against the live API; Gemini's 512-token chunk cap was discovered and incorporated this way.
+## How I approached it
 
-## Improvements
+I started with one article and one upload, checked the real API responses, and then expanded it to the full set. After the basic flow worked, I added cleanup, change detection, tests, Docker, and the daily schedule.
 
-- Add retrieval and answer-quality evaluations with a fixed support question set.
-- Track deleted and renamed source articles, not only additions and updates.
-- Add retry backoff and alerting for partial provider outages.
-- Separate public and plan-specific documents using metadata filters.
-- Add a human handoff when retrieval confidence or citation coverage is low.
+## What I would improve next
 
-## Likely challenges
+- Detect deleted and renamed articles.
+- Add retries and notifications when a scheduled run fails.
+- Keep a small set of test questions for checking answer quality.
+- Separate documents by product version or customer plan when needed.
+- Send uncertain questions to a person instead of guessing.
 
-Source markup changes, stale screenshots, conflicting articles, product-version differences, API quotas, delayed indexing, prompt injection inside documents, and answers that sound plausible despite weak retrieval. Monitoring should cover freshness, retrieval relevance, citation validity, latency, and unanswered-question rate.
+## Things to watch
+
+Articles can become outdated or contradict each other. Site markup can change. API limits and indexing delays can also affect a run. The most useful checks are document freshness, citation quality, unanswered questions, and scheduled-job failures.

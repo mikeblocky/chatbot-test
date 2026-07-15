@@ -1,34 +1,63 @@
 # Lumen Drift 731
 
-A daily Gemini File Search knowledge sync for OptiSigns support content. It fetches 40+ Zendesk articles, removes page chrome, preserves Markdown headings, code, images, and links, then compares SHA-256 hashes stored as Gemini document metadata. Only new or changed documents are embedded; unchanged documents are skipped.
+This project downloads support articles, converts them to Markdown, and keeps a Gemini File Search store up to date. It runs once and exits, so the same command works locally, in Docker, or as a scheduled job.
 
-## Setup
+## Run locally
+
+Python 3.12 or newer is recommended.
 
 ```bash
-cp .env.sample .env.local
-pip install -r requirements.txt
+git clone https://github.com/mikeblocky/lumen-drift-731.git
+cd lumen-drift-731
+python -m venv .venv
 ```
 
-Set `API_KEY` to a Gemini API key. For GitHub Actions, create the repository secret `GEMINI_API_KEY`.
+Activate the environment:
 
-## Run
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+On macOS or Linux, use `source .venv/bin/activate` instead.
+
+Install the packages and create the local environment file:
+
+```bash
+pip install -r requirements.txt
+cp .env.sample .env.local
+```
+
+In PowerShell, use `Copy-Item .env.sample .env.local` instead of `cp`.
+
+Open `.env.local` and replace `your_gemini_api_key` with your Gemini API key. Then run:
 
 ```bash
 python main.py
-python -m pytest -q
 ```
+
+The result is saved to `artifacts/last-run.json`. It shows how many articles were added, updated, or skipped.
+
+## Run with Docker
 
 ```bash
 docker build -t lumen-drift-731 .
-docker run --rm -e API_KEY=your_key lumen-drift-731
+docker run --rm -e API_KEY=your_gemini_api_key lumen-drift-731
 ```
 
-Each invocation runs once and exits. The last run is written to `artifacts/last-run.json` with `added`, `updated`, and `skipped` counts. Gemini File Search uses 512-token chunks with 128-token overlap, its supported 25% overlap configuration.
+The container runs the job once and exits with code 0 when it succeeds.
+
+## Tests
+
+```bash
+python -m pytest -q
+```
 
 ## Daily job
 
-GitHub Actions runs every day at 02:17 UTC and supports manual runs. [View job runs and downloadable last-run artifacts](https://github.com/mikeblocky/lumen-drift-731/actions/workflows/daily-sync.yml).
+GitHub Actions runs the Docker job every day at 02:17 UTC. It can also be started manually from the Actions page.
 
-## Assistant proof
+[View job runs, logs, and last-run artifacts](https://github.com/mikeblocky/lumen-drift-731/actions/workflows/daily-sync.yml)
 
-![OptiBot answering with a cited article URL](artifacts/assistant-screenshot.png)
+## Example answer
+
+![Example answer with its source URL](artifacts/assistant-screenshot.png)
