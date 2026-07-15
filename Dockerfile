@@ -5,6 +5,6 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY main.py test_prompts.py optibot-system-prompt.txt ./
+COPY main.py test_prompts.py web.py optibot-system-prompt.txt ./
 
-CMD ["python", "main.py"]
+CMD ["python", "web.py"]

@@ -13,14 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: docker build -t lumen-drift-731 .
-      - run: docker run --rm -e API_KEY -v "$PWD/artifacts:/app/artifacts" lumen-drift-731 | tee run.log
+      - run: docker build -t chatbot-test .
+      - run: docker run --rm -e API_KEY -v "$PWD/articles:/app/articles" -v "$PWD/artifacts:/app/artifacts" chatbot-test python main.py | tee run.log
         env:
           API_KEY: ${{ secrets.GEMINI_API_KEY }}
       - run: cat artifacts/last-run.json >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7
         with:
-          name: last-run
+          name: scraped-support-data
           path: |
+            articles/*.md
+            articles/manifest.json
             artifacts/last-run.json
             run.log
