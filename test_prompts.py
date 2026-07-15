@@ -30,13 +30,15 @@ def main():
     key = os.getenv("API_KEY") or os.getenv("GEMINI_API_KEY")
     if not key:
         raise RuntimeError("API_KEY is required")
+    custom_prompt = os.getenv("TEST_PROMPT", "").strip()
+    prompts = [custom_prompt] if custom_prompt else PROMPTS
     client = genai.Client(api_key=key)
     stores = [store for store in client.file_search_stores.list() if store.display_name == STORE_NAME]
     if not stores:
         raise RuntimeError("File Search store not found")
     instructions = (ROOT / "optibot-system-prompt.txt").read_text(encoding="utf-8").strip()
     results = []
-    for prompt in PROMPTS:
+    for prompt in prompts:
         interaction = client.interactions.create(
             model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash"),
             system_instruction=instructions,
