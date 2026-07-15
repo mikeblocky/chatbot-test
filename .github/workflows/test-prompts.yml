@@ -1,0 +1,24 @@
+name: Test assistant prompts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker build -t chatbot-test .
+      - run: docker run --rm -e API_KEY -v "$PWD/artifacts:/app/artifacts" chatbot-test python test_prompts.py | tee prompt-tests.log
+        env:
+          API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: prompt-test-results
+          path: |
+            artifacts/prompt-test-results.json
+            prompt-tests.log
