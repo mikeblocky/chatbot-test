@@ -1,0 +1,13 @@
+.git
+.github
+.codex
+.agents
+AGENTS.md
+node_modules
+articles
+artifacts
+.env
+.env.*
+__pycache__
+tests
+*.png
