@@ -27,7 +27,7 @@ def urls(interaction):
         for block in getattr(step, "content", []) or []:
             for annotation in getattr(block, "annotations", []) or []:
                 data = str(getattr(annotation, "model_dump", lambda **_: {})())
-                found.update(re.findall(r"https://support\.optisigns\.com[^'\" ]+", data))
+                found.update(re.findall(r"https://support\.optisigns\.com/hc/en-us/articles/[0-9]+[^'\"\\\\r\\\\n ]*", data))
     return sorted(found)[:3]
 
 
