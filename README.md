@@ -7,8 +7,8 @@ This project downloads support articles, converts them to Markdown, and keeps a 
 Python 3.12 or newer is recommended.
 
 ```bash
-git clone https://github.com/mikeblocky/lumen-drift-731.git
-cd lumen-drift-731
+git clone https://github.com/mikeblocky/chatbot-test.git
+cd chatbot-test
 python -m venv .venv
 ```
 
@@ -56,7 +56,7 @@ python -m pytest -q
 
 GitHub Actions runs the Docker job every day at 02:17 UTC. It can also be started manually from the Actions page.
 
-[View job runs, logs, and last-run artifacts](https://github.com/mikeblocky/lumen-drift-731/actions/workflows/daily-sync.yml)
+[View job runs, logs, and last-run artifacts](https://github.com/mikeblocky/chatbot-test/actions/workflows/daily-sync.yml)
 
 ## Example answer
 
